@@ -1,109 +1,51 @@
-const request = require('request');
 const express = require('express');
-const bodyParser = require('body-parser');
-const cors = require('cors');
-const cookieParser = require('cookie-parser');
-const session = require('express-session');
-const dotenv = require('dotenv');
+const axios = require('axios');
 const app = express();
-dotenv.config();
 
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-app.use(cors({
-    origin: 'http://localhost:3000',
-    credentials: true
-}));
+require('dotenv').config();
 
-app.use(session ({
-    secret: 'secretcode',
-    resave: true,
-    saveUninitialized: true,
-    cookie: {
-        secure: false,
-        sameSite: 'lax'
-    }
-}));
+const symbols = ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'IBM'];
 
-app.use(cookieParser('secretcode'));
+app.get('/api/stocks/', async (req, res) => {
+    const apiKeyStock = process.env.POLYGON_API_KEY;
+    const stockData = [];
 
-const url = 'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=IBM&apikey=' + process.env.API_KEY;
-const url2 = 'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=AAPL&apikey=' + process.env.API_KEY;
-const url3 = 'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=MSFT&apikey=' + process.env.API_KEY;
-const url4 = 'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=GOOGL&apikey=' + process.env.API_KEY;
-const url5 = 'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=AMZN&apikey=' + process.env.API_KEY;
-request.get({
-    url: url,
-    json: true,
-    headers: {'User-Agent': 'request'}
-  }, (err, res, data) => {
-    if (err) {
-      console.log('Error:', err);
-    } else if (res.statusCode !== 200) {
-      console.log('Status:', res.statusCode);
-    } else {
-      // data is successfully parsed as a JSON object:
-      console.log(data);
+    // Fetch data for each symbol using axios.all for parallel requests
+    try {
+        const requests = symbols.map(symbol => 
+            axios.get(`https://api.polygon.io/v2/aggs/ticker/${symbol}/prev?adjusted=true&apiKey=${apiKeyStock}`)
+        );
+        
+        // Wait for all requests to resolve
+        const responses = await axios.all(requests);
+        
+        // Extract data from each response
+        responses.forEach(response => stockData.push(response.data));
+        
+        // Log aggregated stock data to the server console
+        console.log(stockData);
+        
+        // Send aggregated stock data to the frontend
+        res.json(stockData);
+    } catch (error) {
+        console.error('Polygon API error:', error.message);
+        res.status(500).send('Error fetching data from Polygon API');
     }
 });
 
-request.get({
-    url: url2,
-    json: true,
-    headers: {'User-Agent': 'request'}
-  }, (err, res, data) => {
-    if (err) {
-      console.log('Error:', err);
-    } else if (res.statusCode !== 200) {
-      console.log('Status:', res.statusCode);
-    } else {
-      // data is successfully parsed as a JSON object:
-      console.log(data);
-    }
+app.get('/api/news', async (req, res) => {
+  const apiKeyNews = process.env.NEWS_API_KEY;
+  const url =`https://newsapi.org/v2/top-headlines?country=us&apiKey=${apiKeyNews}`;
+
+  try  {
+    const response = await axios.get(url);
+    res.json(response.data);
+  } catch (error) {
+    console.error('News API error:', error.message);
+    res.status(500).send('Error fetching data from News API');
+  }
 });
-request.get({
-    url: url3,
-    json: true,
-    headers: {'User-Agent': 'request'}
-  }, (err, res, data) => {
-    if (err) {
-      console.log('Error:', err);
-    } else if (res.statusCode !== 200) {
-      console.log('Status:', res.statusCode);
-    } else {
-      // data is successfully parsed as a JSON object:
-      console.log(data);
-    }
-});
-request.get({
-    url: url4,
-    json: true,
-    headers: {'User-Agent': 'request'}
-  }, (err, res, data) => {
-    if (err) {
-      console.log('Error:', err);
-    } else if (res.statusCode !== 200) {
-      console.log('Status:', res.statusCode);
-    } else {
-      // data is successfully parsed as a JSON object:
-      console.log(data);
-    }
-});
-request.get({
-    url: url5,
-    json: true,
-    headers: {'User-Agent': 'request'}
-  }, (err, res, data) => {
-    if (err) {
-      console.log('Error:', err);
-    } else if (res.statusCode !== 200) {
-      console.log('Status:', res.statusCode);
-    } else {
-      // data is successfully parsed as a JSON object:
-      console.log(data);
-    }
-});
-app.use(express.static('public'));
+
 app.listen(8080, () => {
     console.log('Server is running on port 8080');
 });

@@ -49,7 +49,7 @@ app.get('/api/news', async (req, res) => {
 
 app.get('/api/weather', async (req, res) => {
   const apiKeyWeather = process.env.WEATHER_API_KEY;
-  const url =`https://api.openweathermap.org/data/2.5/weather?q=London&appid=${apiKeyWeather}`;
+  const url =`https://api.openweathermap.org/data/2.5/weather?q=Sarnia,ca&appid=${apiKeyWeather}`;
 
   try  {
     const response = await axios.get(url);

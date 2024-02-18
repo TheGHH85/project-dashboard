@@ -46,6 +46,21 @@ app.get('/api/news', async (req, res) => {
   }
 });
 
+
+app.get('/api/weather', async (req, res) => {
+  const apiKeyWeather = process.env.WEATHER_API_KEY;
+  const url =`https://api.openweathermap.org/data/2.5/weather?q=London&appid=${apiKeyWeather}`;
+
+  try  {
+    const response = await axios.get(url);
+    res.json(response.data);
+  } catch (error) {
+    console.error('Weather API error:', error.message);
+    res.status(500).send('Error fetching data from News API');
+  }
+});
+
+
 app.listen(8080, () => {
     console.log('Server is running on port 8080');
 });

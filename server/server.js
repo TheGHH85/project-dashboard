@@ -1,17 +1,23 @@
+//sorry zac, had to redo all this so i could add a timmer to the stock data
+
 const express = require('express');
 const axios = require('axios');
 const app = express();
+const cors = require('cors');
 
 require('dotenv').config();
 
+app.use(cors());
+
 const symbols = ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'IBM'];
 
-app.get('/api/stocks/', async (req, res) => {
+// Function to fetch stock data
+const fetchStockData = async () => {
     const apiKeyStock = process.env.POLYGON_API_KEY;
     const stockData = [];
 
     // Fetch data for each symbol using axios.all for parallel requests
-    try {
+    try { 
         const requests = symbols.map(symbol => 
             axios.get(`https://api.polygon.io/v2/aggs/ticker/${symbol}/prev?adjusted=true&apiKey=${apiKeyStock}`)
         );
@@ -25,42 +31,83 @@ app.get('/api/stocks/', async (req, res) => {
         // Log aggregated stock data to the server console
         console.log(stockData);
         
-        // Send aggregated stock data to the frontend
-        res.json(stockData);
+        // Return aggregated stock data
+        return stockData;
     } catch (error) {
         console.error('Polygon API error:', error.message);
-        res.status(500).send('Error fetching data from Polygon API');
+        throw new Error('Error fetching data from Polygon API');
     }
+};
+
+// Function to fetch news data
+const fetchNewsData = async () => {
+    const apiKeyNews = process.env.NEWS_API_KEY;
+    const url =`https://newsapi.org/v2/top-headlines?country=us&apiKey=${apiKeyNews}`;
+    try {
+        const response = await axios.get(url);
+        return response.data;
+    } catch (error) {
+        console.error('News API error:', error.message);
+        throw new Error('Error fetching data from News API');
+    }
+};
+
+// Function to fetch weather data
+const fetchWeatherData = async () => {
+    const apiKeyWeather = process.env.WEATHER_API_KEY;
+    const url =`https://api.openweathermap.org/data/2.5/weather?q=London&appid=${apiKeyWeather}`;
+
+    try  {
+        const response = await axios.get(url);
+        return response.data;
+    } catch (error) {
+        console.error('Weather API error:', error.message);
+        throw new Error('Error fetching data from Weather API');
+    }
+};
+
+// Initial data fetch
+let stockData = [];
+let newsData = null;
+let weatherData = null;
+
+// Fetch data initially
+(async () => {
+    try {
+        stockData = await fetchStockData();
+        newsData = await fetchNewsData();
+        weatherData = await fetchWeatherData();
+    } catch (error) {
+        console.error('Error fetching initial data:', error.message);
+    }
+})();
+
+// Fetch data every minute
+setInterval(async () => {
+    try {
+        stockData = await fetchStockData();
+        newsData = await fetchNewsData();
+        weatherData = await fetchWeatherData();
+    } catch (error) {
+        console.error('Error fetching data:', error.message);
+    }
+}, 60000); // 60000 milliseconds = 1 minute
+
+// API endpoints
+app.get('/api/stocks', (req, res) => {
+    res.json(stockData);
 });
 
-app.get('/api/news', async (req, res) => {
-  const apiKeyNews = process.env.NEWS_API_KEY;
-  const url =`https://newsapi.org/v2/top-headlines?country=us&apiKey=${apiKeyNews}`;
-
-  try  {
-    const response = await axios.get(url);
-    res.json(response.data);
-  } catch (error) {
-    console.error('News API error:', error.message);
-    res.status(500).send('Error fetching data from News API');
-  }
+app.get('/api/news', (req, res) => {
+    res.json(newsData);
 });
 
-
-app.get('/api/weather', async (req, res) => {
-  const apiKeyWeather = process.env.WEATHER_API_KEY;
-  const url =`https://api.openweathermap.org/data/2.5/weather?q=London&appid=${apiKeyWeather}`;
-
-  try  {
-    const response = await axios.get(url);
-    res.json(response.data);
-  } catch (error) {
-    console.error('Weather API error:', error.message);
-    res.status(500).send('Error fetching data from News API');
-  }
+app.get('/api/weather', (req, res) => {
+    res.json(weatherData);
 });
 
-
-app.listen(8080, () => {
-    console.log('Server is running on port 8080');
+// Start the server
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
 });

@@ -7,10 +7,10 @@ function App(props) {
   const [weather, setWeather] = useState(null);
   const [stocks, setStocks] = useState(null);
 
-  useEffect(() => {
+useEffect(() => {
     const fetchWeather = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/api/weather'); //make sure this has localhost:8080 infront of it.
+        const response = await axios.get('http://localhost:8080/api/weather');
         setWeather(response.data);
       } catch (error) {
         console.error('Error fetching weather data:', error.message);
@@ -78,9 +78,15 @@ function App(props) {
                       <div className="div-19">
                         <div className="div-20">Feels Like</div>
                         <div className="div-21">
-                          <div className="div-22">8.4</div>
+                          {weather && (
+                            <div className="div-22">
+                              {((weather.main.feels_like - 273.15) * 9/5 + 32).toFixed(2)}
+                              <span style={{ fontSize: '28px' }}></span>
+                            </div>
+                          )}
+
                           <div className="div-23">
-                            <span style={{fontSize: '28px'}}>° C</span>{" "}
+                            <span style={{fontSize: '28px'}}>° F</span>{" "}
                           </div>
                         </div>
                       </div>
@@ -88,7 +94,12 @@ function App(props) {
                     <div className="column-3">
                       <div className="div-24">
                         <div className="div-25">Sunrise</div>
-                        <div className="div-26">Time</div>
+                        <div className="div-26">                          {weather && (
+                              <div className="div-22">
+                                {weather.sys.sunrise}
+                                <span style={{ fontSize: '100px' }}></span>
+                              </div>
+                            )}</div>
                       </div>
                     </div>
                   </div>
@@ -98,23 +109,26 @@ function App(props) {
                     <div className="column-4">
                       <div className="div-29">
                         <div className="div-30">Humidity</div>
-                        <div className="div-31">79%</div>
+                        <div className="div-31">
+                        {weather && (
+                              <div className="div-22">
+                                {weather.main.humidity}
+                                <span style={{ fontSize: '100px' }}>%</span>
+                              </div>
+                            )}
+                        </div>
                       </div>
                     </div>
                     <div className="column-5">
                       <div className="div-32">
                         <div className="div-33">Sunset</div>
-                        <div className="div-34">Time</div>
-                      </div>
-                    </div>
-                    <div className="column-6">
-                      <div className="div-35">
-                        <div className="div-36">Max Temp</div>
-                        <div className="div-37">
-                          <div className="div-38">8.4</div>
-                          <div className="div-39">
-                            <span style={{fontSize: '28px'}}>° C</span>{" "}
-                          </div>
+                        <div className="div-34">
+                          {weather && (
+                              <div className="div-22-sunset">
+                                {weather.sys.sunset}
+                                <span style={{ fontSize: '100px' }}></span>
+                              </div>
+                            )}
                         </div>
                       </div>
                     </div>
@@ -641,6 +655,11 @@ function App(props) {
           letter-spacing: -5px;
           flex-grow: 1;
           font: 100px Outfit, sans-serif;
+          
+        }
+        .div-22-sunset {
+          text-align: center;
+          margin-left: 150px;
         }
         @media (max-width: 991px) {
           .div-22 {
@@ -704,8 +723,9 @@ function App(props) {
         .div-26 {
           color: #fff;
           letter-spacing: 3px;
-          align-self: end;
+          align-self: center;
           margin-top: 53px;
+          marging-left: 400px;
           font: 100px Outfit, sans-serif;
         }
         @media (max-width: 991px) {
@@ -775,11 +795,14 @@ function App(props) {
         .div-30 {
           letter-spacing: 1.05px;
           font: 35px Outfit, sans-serif;
+          text-align: center; 
+          margin-left: 45px;
         }
         .div-31 {
           letter-spacing: 3px;
           margin-top: 39px;
           font: 100px Outfit, sans-serif;
+          margin-left: 40px;
         }
         @media (max-width: 991px) {
           .div-31 {
@@ -814,7 +837,10 @@ function App(props) {
           text-align: center;
           line-height: 120%;
           width: 100%;
-          padding: 20px 2px 35px 0px;
+          padding-top: 20px;
+          padding-right: 150px;
+          padding-bottom: 35px;
+          padding-left: 0px;
           margin-left: 46px;
         }
         @media (max-width: 991px) {
@@ -829,11 +855,13 @@ function App(props) {
           color: #eee;
           letter-spacing: 1.05px;
           font: 35px Outfit, sans-serif;
+          text-align: center;
+          margin-left: 125px;
         }
         .div-34 {
           color: #fff;
           letter-spacing: 3px;
-          align-self: end;
+          align-self: center;
           margin-top: 48px;
           font: 100px Outfit, sans-serif;
         }
@@ -1678,6 +1706,7 @@ function App(props) {
             max-width: 100%;
           }
         }
+        
       `}</style>
     </>
   );

@@ -40,6 +40,20 @@ useEffect(() => {
     fetchStocks();
   }, []);
 
+function formatSunsetTime(unixTimestamp) {
+  const date = new Date(unixTimestamp * 1000); 
+  const options = {
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: true, 
+    timeZoneName: 'short'
+  };
+  const timeString = new Intl.DateTimeFormat('en-US', options).format(date);
+
+  return timeString;
+}
+
   return (
     <>
       <div className="div">
@@ -95,9 +109,9 @@ useEffect(() => {
                       <div className="div-24">
                         <div className="div-25">Sunrise</div>
                         <div className="div-26">                          {weather && (
-                              <div className="div-22">
-                                {weather.sys.sunrise}
-                                <span style={{ fontSize: '100px' }}></span>
+                              <div className="div-22-sunset">
+                                {formatSunsetTime(weather.sys.sunrise)}
+                              <span style={{}}></span>
                               </div>
                             )}</div>
                       </div>
@@ -121,14 +135,14 @@ useEffect(() => {
                     </div>
                     <div className="column-5">
                       <div className="div-32">
-                        <div className="div-33">Sunset</div>
+                      <div className="div-33">Sunset</div>
                         <div className="div-34">
                           {weather && (
-                              <div className="div-22-sunset">
-                                {weather.sys.sunset}
-                                <span style={{ fontSize: '100px' }}></span>
-                              </div>
-                            )}
+                            <div className="div-22-sunset">
+                              {formatSunsetTime(weather.sys.sunset)}
+                              <span style={{}}></span>
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -660,6 +674,7 @@ useEffect(() => {
         .div-22-sunset {
           text-align: center;
           margin-left: 150px;
+          
         }
         @media (max-width: 991px) {
           .div-22 {
@@ -726,7 +741,7 @@ useEffect(() => {
           align-self: center;
           margin-top: 53px;
           marging-left: 400px;
-          font: 100px Outfit, sans-serif;
+          font: 50px Outfit, sans-serif;
         }
         @media (max-width: 991px) {
           .div-26 {
@@ -781,7 +796,7 @@ useEffect(() => {
           font-weight: 400;
           line-height: 120%;
           margin: 0 auto;
-          padding: 23px 10px;
+          padding: 35px 1px;
           padding-bottom: 65px;
           margin-left: -20px;
           padding-right: 75px;
@@ -863,7 +878,7 @@ useEffect(() => {
           letter-spacing: 3px;
           align-self: center;
           margin-top: 48px;
-          font: 100px Outfit, sans-serif;
+          font: 50px Outfit, sans-serif;
         }
         @media (max-width: 991px) {
           .div-34 {

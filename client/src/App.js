@@ -1,13 +1,79 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
 function App(props) {
-
   const [news, setNews] = useState(null);
   const [weather, setWeather] = useState(null);
   const [stocks, setStocks] = useState(null);
+  const newsRef = useRef(null);
+  const stockRef = useRef(null);
+  const weatherRef = useRef(null);
+  const [name, setName] = useState(() => Cookies.get('name') || "");
+  const [showConsent, setShowConsent] = useState(() => !Cookies.get('cookieConsent'));
+  const [isHovering, setIsHovering] = useState(false);
+  const [showLimitMessage, setShowLimitMessage] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  
 
-useEffect(() => {
+
+  
+  const fetchStocks = async () => {
+    try {
+      const response = await axios.get('http://localhost:8080/api/stocks');
+      setStocks(response.data);
+    } catch (error) {
+      console.error('Error fetching stocks data:', error.message);
+    }
+  };
+
+  const clearSearch = () => {
+    setSearchQuery('');
+  };
+
+  const executeSearch = () => {
+    if (searchQuery) {
+      const url = `https://www.marketwatch.com/investing/stock/${encodeURIComponent(searchQuery)}?mod=search_symbol`;
+      window.open(url, '_blank');
+      setSearchQuery(''); 
+    }
+  };
+  
+  const handleSearchEnter = (e) => {
+    if (e.key === 'Enter') {
+      executeSearch();
+    }
+  };
+  useEffect(() => {
+    if (!Cookies.get('name') && !Cookies.get('cookieConsent')) {
+      const userName = prompt("Please enter your name:", "");
+      if (userName) {
+        setName(userName);
+        //wait for yes or no 
+      }
+    }
+  }, []);
+
+ 
+  const scrollToNews = () => {
+    if (newsRef.current) {
+      newsRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const scrollToStocks = () => {
+    if (stockRef.current) {
+      stockRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const scrollToWeather = () => {
+    if (weatherRef.current) {
+      weatherRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  useEffect(() => {
     const fetchWeather = async () => {
       try {
         const response = await axios.get('http://localhost:8080/api/weather');
@@ -26,47 +92,92 @@ useEffect(() => {
       }
     };
 
-    const fetchStocks = async () => {
-      try {
-        const response = await axios.get('http://localhost:8080/api/stocks');
-        setStocks(response.data);
-      } catch (error) {
-        console.error('Error fetching stocks data:', error.message);
-      }
-    }
-
     fetchWeather();
     fetchNews();
     fetchStocks();
   }, []);
 
-function formatSunsetTime(unixTimestamp) {
-  const date = new Date(unixTimestamp * 1000); 
-  const options = {
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    hour12: true, 
-    timeZoneName: 'short'
+  const handleNameChange = () => {
+    const newName = prompt("Enter your new name:", name);
+    if (newName && newName !== name) {
+      setName(newName);
+      if (Cookies.get('cookieConsent') === "yes") {
+        Cookies.set('name', newName, { expires: 7 });
+      }
+    }
   };
-  const timeString = new Intl.DateTimeFormat('en-US', options).format(date);
+  const handleConsent = (consent) => {
+    setShowConsent(false);
+    Cookies.set('cookieConsent', consent, { expires: 365 });
+    if (consent === "yes") {
+      Cookies.set('name', name, { expires: 7 });
+    }
+  };
 
-  return timeString;
-}
+  const handleRefreshStocks = () => {
+    const limitReached = true; 
+    if (limitReached) {
+      setShowLimitMessage(true);
+     
+      setTimeout(() => setShowLimitMessage(false), 5000); 
+    } else {
+      fetchStocks();
+    }
+  };
 
+  function kelvinToCelsius(kelvin) {
+    return (kelvin - 273.15).toFixed(2);
+  }
+
+  function formatSunsetTime(unixTimestamp) {
+    const date = new Date(unixTimestamp * 1000);
+    const timeOptions = {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: true
+    };
+    const timezoneOptions = {
+      timeZoneName: 'short'
+    };
+    const timeString = new Intl.DateTimeFormat('en-US', timeOptions).format(date);
+    const timezoneString = new Intl.DateTimeFormat('en-US', timezoneOptions).format(date).split(' ')[1];
+    return (
+      <>
+        <span>{timeString}</span>
+        <br />
+        <span>{timezoneString}</span>
+      </>
+    );
+  }
   return (
     <>
+      {showConsent && (
+        <div className="consent-banner">
+          &#x1F44B; Hi! Just wanted to let you know that we use cookies on our site. These cookies enhance your experience, improve the quality of our site, and help us show you things that are more likely to be relevant to you. By clicking "Accept", you're agreeing to the placement and use of cookies. That is all. Thanks for reading!
+          <div style={{ marginTop: "10px" }}>
+            <button className="button-style" onClick={() => handleConsent("yes")}>Yes</button>
+            <button className="button-style" onClick={() => handleConsent("no")}>No</button>
+          </div>
+        </div>
+      )}
       <div className="div">
         <div className="div-2">
-          <div className="div-3">Welcome Name</div>
-          <div className="div-4">
-            <div className="div-5">Weather</div>
-            <div className="div-6">News</div>
-            <div className="div-7">Stocks</div>
+          <div 
+            className="div-3"
+            onMouseEnter={() => setIsHovering(true)}
+            onMouseLeave={() => setIsHovering(false)}
+            onClick={handleNameChange}
+          >
+            Welcome {name}{isHovering && <span style={{ marginRight: '5px' }}> &#x1F589;</span>}
           </div>
-          <div className="div-8">Time</div>
+        <div className="div-4">
+          <div className="div-5" onClick={scrollToWeather}>Weather</div>
+          <div className="div-6" onClick={scrollToStocks}>Stocks</div>
+          <div className="div-7" onClick={scrollToNews}>News</div>
         </div>
-        <div className="div-9">
+        </div>
+        <div className="div-9" ref={weatherRef}>
           <div className="div-10">
             <div className="column">
               <div className="div-11">
@@ -76,12 +187,25 @@ function formatSunsetTime(unixTimestamp) {
                   className="img"
                 />
                 <div className="div-12">
-                  <div className="div-13">8.4</div>
+                  <div className="div-13">
+                  {weather && (
+                      <div className="div-22">
+                        {kelvinToCelsius(weather.main.temp)}
+                      </div>
+                    )}
+                    </div>
                   <div className="div-14">
                     <span style={{fontSize: '28px'}}>° C</span>{" "}
                   </div>
                 </div>
-                <div className="div-15">London, Ontario</div>
+                <div className="div-15">
+                {weather && (
+                  <div>
+                    {weather.name}, {weather.sys.country}
+                    <span style={{ fontSize: '26px' }}></span> {/* Adjust font size as needed */}
+                  </div>
+                )}
+              </div>
               </div>
             </div>
             <div className="column-2">
@@ -94,13 +218,13 @@ function formatSunsetTime(unixTimestamp) {
                         <div className="div-21">
                           {weather && (
                             <div className="div-22">
-                              {((weather.main.feels_like - 273.15) * 9/5 + 32).toFixed(2)}
+                              {(weather.main.feels_like - 273.15).toFixed(2)}
                               <span style={{ fontSize: '28px' }}></span>
                             </div>
                           )}
 
                           <div className="div-23">
-                            <span style={{fontSize: '28px'}}>° F</span>{" "}
+                            <span style={{fontSize: '28px'}}>° c</span>{" "}
                           </div>
                         </div>
                       </div>
@@ -108,8 +232,9 @@ function formatSunsetTime(unixTimestamp) {
                     <div className="column-3">
                       <div className="div-24">
                         <div className="div-25">Sunrise</div>
-                        <div className="div-26">                          {weather && (
-                              <div className="div-22-sunset">
+                        <div className="div-26">                          
+                        {weather && (
+                              <div className="div-22-sunrise">
                                 {formatSunsetTime(weather.sys.sunrise)}
                               <span style={{}}></span>
                               </div>
@@ -152,25 +277,37 @@ function formatSunsetTime(unixTimestamp) {
             </div>
           </div>
         </div>
-        <div className="div-40">
-          <div className="div-41">
-            <div className="div-42">􀊫</div>
-            <div className="div-43">Search Stocks </div>
+        <div className="div-40" ref={stockRef}>
+            <div className="div-41">
             <img
-              loading="lazy"
-              src="https://cdn.builder.io/api/v1/image/assets/TEMP/2f9c373d0804712ab5f64a26887c68fe207244ccbb93b4f4ebe06cdeca2acb4d?apiKey=bfadb715bc704462b9199ff254b319bd&"
-              className="img-2"
+              src="/search.png"
+              className="div-42"
+              alt="Search"
+              onClick={executeSearch} 
             />
+            <input
+                className="div-43"
+                placeholder="Search Stocks"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={handleSearchEnter} 
+              />
+              <img
+                loading="lazy"
+                src="https://cdn.builder.io/api/v1/image/assets/TEMP/2f9c373d0804712ab5f64a26887c68fe207244ccbb93b4f4ebe06cdeca2acb4d?apiKey=bfadb715bc704462b9199ff254b319bd&"
+                className="img-2"
+                onClick={clearSearch}
+              />
+            </div>
           </div>
-        </div>
-        <div className="div-44">
+          <div className="div-44">
           <div className="div-45">
             <div className="column-7">
               <div className="div-46">
               <div className="div-47">
                 {stocks && stocks.length > 0 && (
                       <div>
-                        {stocks[1].ticker} (Microsoft)
+                        {stocks[0].ticker} (Apple)
                         <br />
                       </div>
                 )}
@@ -255,7 +392,12 @@ function formatSunsetTime(unixTimestamp) {
                 </div>
           </div>
         </div>
-        <div className="div-102">Refresh Stocks</div>
+        {showLimitMessage && (
+          <div style={{ textAlign: 'center', color: 'red', marginBottom: '0px', fontSize: "35px", font: "35px Outfit, sans-serif" }}>
+            Reached maximum calls per hour on free tier.
+          </div>
+        )}
+         <div className="div-102" onClick={handleRefreshStocks}>Refresh Stocks</div>
         <div className="div-78">
           <div className="div-79">
             <div className="column">
@@ -291,7 +433,7 @@ function formatSunsetTime(unixTimestamp) {
                 </div>
               </div>
             </div>
-            <div className="column-11">
+            <div className="column-11" ref={newsRef}>
                 <div className="div-85">
                   <div className="div-87">
                     <div className="div-88">
@@ -400,6 +542,43 @@ function formatSunsetTime(unixTimestamp) {
         <div className="div-103" />
       </div>
       <style jsx>{`
+        .consent-banner {
+          position: fixed;
+          bottom: 10px;
+          left: 50%;
+          transform: translateX(-50%);
+          background-color: rgba(31, 29, 71, 0.97);
+          padding: 50px;
+          text-align: center;
+          width: 50%;
+          font-size: 30px;
+          font-family: Outfit, sans-serif;
+          color: white;
+          border: 5px solid #50529b;
+
+        }
+
+        .button-style {
+          border-radius: 13.5px;
+          border: 2px solid #50529b;
+          background: linear-gradient(
+            180deg,
+            rgba(96, 50, 153, 0.31) 0%,
+            rgba(96, 50, 153, 0) 100%
+          );
+          color: #fff;
+          padding: 15px 80px; /* Adjust the padding to make the buttons longer */
+          margin: 5px;
+          font: 400 25px/1.6 Outfit, -apple-system, Roboto, Helvetica, sans-serif;
+          cursor: pointer;
+          transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        }
+        
+        .button-style:hover {
+          background-color: rgba(96, 50, 153, 0.8);
+          border-color: rgba(96, 50, 153, 0.8);
+        }
+
         .div {
           background: linear-gradient(156deg, #252746 3.32%, #412a82 96.42%);
           display: flex;
@@ -421,6 +600,7 @@ function formatSunsetTime(unixTimestamp) {
           text-align: center;
           line-height: 86%;
           padding: 16px 30px 25px;
+          justify-content: space-around;
         }
         @media (max-width: 991px) {
           .div-2 {
@@ -430,11 +610,12 @@ function formatSunsetTime(unixTimestamp) {
           }
         }
         .div-3 {
-          margin-top: 14px;
+          margin-top: 24px;
           flex-grow: 1;
           flex-basis: auto;
           font: 600 64px/43% Outfit, -apple-system, Roboto, Helvetica,
             sans-serif;
+          margin-right: auto;
         }
         @media (max-width: 991px) {
           .div-3 {
@@ -460,20 +641,36 @@ function formatSunsetTime(unixTimestamp) {
         .div-5 {
           font-family: Outfit, sans-serif;
           flex-grow: 1;
+          margin-left: auto;
+          background-color: initial;
+          transition: background-color 0.3s ease; 
         }
         .div-6 {
           font-family: Outfit, sans-serif;
           flex-grow: 1;
           flex-basis: auto;
+          margin-left: auto;
+          background-color: initial;
+          transition: background-color 0.3s ease; 
         }
         .div-7 {
           font-family: Outfit, sans-serif;
           flex-grow: 1;
+          margin-right: 410px;
+          margin-left: auto;
+          background-color: initial;
+          transition: background-color 0.3s ease; 
         }
-        .div-8 {
-          color: #fff;
-          text-align: right;
-          font-family: Outfit, sans-serif;
+
+        .div-5:hover:after, .div-6:hover:after, .div-7:hover:after {
+          content: '˅'; /* Down arrow appears on hover */
+          font-size: 30px; /* Adjust the size as needed */
+          margin-left: 8px; 
+        }
+        
+        .div-3:hover, .div-5:hover, .div-6:hover, .div-7:hover {
+          color: #A8A8A8; 
+          transition:  0.3s ease;
         }
         .div-9 {
           margin-top: 28px;
@@ -637,7 +834,7 @@ function formatSunsetTime(unixTimestamp) {
           font-weight: 400;
           line-height: 120%;
           margin: 0 auto;
-          padding: 23px 10px;
+          padding: 23px 4px;
           padding-bottom: 65px;
           
         }
@@ -674,7 +871,16 @@ function formatSunsetTime(unixTimestamp) {
         .div-22-sunset {
           text-align: center;
           margin-left: 150px;
+          margin-top: -10px;
+          font: 63px Outfit, sans-serif;
           
+        }
+
+        .div-22-sunrise {
+          text-align: center;
+          margin-left: 15px;
+          margin-top: -30px;
+          font: 63px Outfit, sans-serif;
         }
         @media (max-width: 991px) {
           .div-22 {
@@ -685,6 +891,8 @@ function formatSunsetTime(unixTimestamp) {
           letter-spacing: -1.2px;
           align-self: start;
           font: 24px Inter, sans-serif;
+          margin-right: 10px;
+          margin-left:-15px;
         }
         .column-3 {
           display: flex;
@@ -714,7 +922,12 @@ function formatSunsetTime(unixTimestamp) {
           text-align: center;
           line-height: 120%;
           width: 100%;
-          padding: 25px 0px 25px 31px;
+          padding-top: 25px;
+          padding-right: 20px;
+          padding-bottom: 25px;
+          padding-left: 8px;
+          margin-left: -10px;
+
         }
         @media (max-width: 991px) {
           .div-24 {
@@ -811,13 +1024,14 @@ function formatSunsetTime(unixTimestamp) {
           letter-spacing: 1.05px;
           font: 35px Outfit, sans-serif;
           text-align: center; 
-          margin-left: 45px;
+          margin-left: 65px;
+          margin-top: -10px;
         }
         .div-31 {
           letter-spacing: 3px;
           margin-top: 39px;
           font: 100px Outfit, sans-serif;
-          margin-left: 40px;
+          margin-left: 50px;
         }
         @media (max-width: 991px) {
           .div-31 {
@@ -855,8 +1069,8 @@ function formatSunsetTime(unixTimestamp) {
           padding-top: 20px;
           padding-right: 150px;
           padding-bottom: 35px;
-          padding-left: 0px;
-          margin-left: 46px;
+          padding-left: 17px;
+          margin-left: 35px;
         }
         @media (max-width: 991px) {
           .div-32 {
@@ -967,15 +1181,18 @@ function formatSunsetTime(unixTimestamp) {
           display: flex;
           margin-top: 21px;
           width: 100%;
-          max-width: 1306px;
+          max-width: 1334px;
+          margin-left: 24px;
           flex-direction: column;
           justify-content: center;
         }
+        
         @media (max-width: 991px) {
           .div-40 {
             max-width: 100%;
           }
         }
+        
         .div-41 {
           align-items: center;
           border-radius: 10px;
@@ -984,38 +1201,43 @@ function formatSunsetTime(unixTimestamp) {
           gap: 0px;
           padding: 12px 20px;
         }
+        
         @media (max-width: 991px) {
           .div-41 {
             max-width: 100%;
             flex-wrap: wrap;
           }
         }
+        
         .div-42 {
-          justify-content: center;
-          align-self: stretch;
-          aspect-ratio: 1;
-          color: #393e46;
-          white-space: nowrap;
-          text-align: center;
-          padding: 6px;
-          font: 500 18px/278% SF Pro Display, -apple-system, Roboto, Helvetica,
-            sans-serif;
+          width: 50px; 
+          height: auto; /
         }
+        
         @media (max-width: 991px) {
           .div-42 {
             white-space: initial;
           }
         }
+        
         .div-43 {
-          color: #eee;
-          font-feature-settings: "clig" off, "liga" off;
-          letter-spacing: -0.41px;
-          align-self: stretch;
-          flex-grow: 1;
-          flex-basis: auto;
-          margin: auto 0;
-          font: 400 20px/110% Outfit, -apple-system, Roboto, Helvetica,
-            sans-serif;
+          border: none; /* Remove default border */
+          background-color: transparent; /* Transparent background */
+          color: #eee; /* Text color */
+          padding: 12px 20px; /* Padding */
+          font: 400 30px/110% Outfit, -apple-system, Roboto, Helvetica, sans-serif; /* Font styles */
+          align-self: stretch; /* Align input height with container */
+          flex-grow: 1; /* Let the input take available horizontal space */
+          margin: auto 0; /* Center vertically */
+        }
+        
+        .div-43::placeholder {
+          color: #ccc; /* Placeholder text color */
+        }
+        
+        .div-43:focus {
+          outline: none; /* Remove default focus outline */
+          background-color: #6e7681; /* Optional: Change background on focus */
         }
         @media (max-width: 991px) {
           .div-43 {
@@ -1026,7 +1248,7 @@ function formatSunsetTime(unixTimestamp) {
           aspect-ratio: 1;
           object-fit: auto;
           object-position: center;
-          width: 18px;
+          width: 30px;
           align-self: stretch;
           margin: auto 0;
         }
@@ -1702,6 +1924,11 @@ function formatSunsetTime(unixTimestamp) {
           padding: 31px 60px;
           font: 400 30px/92% Outfit, -apple-system, Roboto, Helvetica,
             sans-serif;
+        }
+
+        .div-102:hover{
+          background-color: rgba(96, 50, 153, 0.8);
+          border-color: rgba(96, 50, 153, 0.8);
         }
         @media (max-width: 991px) {
           .div-102 {

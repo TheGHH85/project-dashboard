@@ -135,18 +135,18 @@ function App(props) {
       hour: '2-digit',
       minute: '2-digit',
       second: '2-digit',
-      hour12: true
+      hour12: true,
+      timeZone: 'America/New_York' 
     };
-    const timezoneOptions = {
-      timeZoneName: 'short'
-    };
-    const timeString = new Intl.DateTimeFormat('en-US', timeOptions).format(date);
-    const timezoneString = new Intl.DateTimeFormat('en-US', timezoneOptions).format(date).split(' ')[1];
+    let timeString = new Intl.DateTimeFormat('en-US', timeOptions).format(date);
+
+    timeString = timeString.charAt(0) === '0' ? timeString.substring(1) : timeString;
+  
     return (
       <>
         <span>{timeString}</span>
         <br />
-        <span>{timezoneString}</span>
+        <span>EST</span> {}
       </>
     );
   }
@@ -412,7 +412,7 @@ function App(props) {
                 <div className="div-82">
                 <div className="div-83">
                   {news && news.articles && news.articles.length > 0 && (
-                    <div className="div-81">
+                    <div className="div-81-description">
                       {news.articles[3].description} 
                     </div>
                   )}
@@ -438,7 +438,7 @@ function App(props) {
                   <div className="div-87">
                     <div className="div-88">
                       {news && news.articles && news.articles.length > 0 && (
-                        <div className="div-88">
+                        <div className="div-88-title">
                           {news.articles[8].title} 
                         </div>
                       )}
@@ -446,7 +446,7 @@ function App(props) {
                     </div>
                     <div className="div-86">
                       {news && news.articles && news.articles.length > 0 && (
-                        <div className="div-81">
+                        <div className="div-86-description">
                           {news.articles[8].description} 
                         </div>
                       )}
@@ -507,7 +507,7 @@ function App(props) {
               <div className="div-97">
                 <div className="div-98">
                     {news && news.articles && news.articles.length > 0 && (
-                    <div className="div-81">
+                    <div className="div-98-title">
                       {news.articles[6].title} 
                     </div>
                   )}
@@ -567,7 +567,7 @@ function App(props) {
             rgba(96, 50, 153, 0) 100%
           );
           color: #fff;
-          padding: 15px 80px; /* Adjust the padding to make the buttons longer */
+          padding: 15px 80px; 
           margin: 5px;
           font: 400 25px/1.6 Outfit, -apple-system, Roboto, Helvetica, sans-serif;
           cursor: pointer;
@@ -663,8 +663,8 @@ function App(props) {
         }
 
         .div-5:hover:after, .div-6:hover:after, .div-7:hover:after {
-          content: '˅'; /* Down arrow appears on hover */
-          font-size: 30px; /* Adjust the size as needed */
+          content: '˅'; 
+          font-size: 30px; 
           margin-left: 8px; 
         }
         
@@ -1221,23 +1221,26 @@ function App(props) {
         }
         
         .div-43 {
-          border: none; /* Remove default border */
-          background-color: transparent; /* Transparent background */
-          color: #eee; /* Text color */
-          padding: 12px 20px; /* Padding */
+          border: none; 
+          background-color: transparent; 
+          color: #eee; 
+          padding: 12px 20px; 
           font: 400 30px/110% Outfit, -apple-system, Roboto, Helvetica, sans-serif; /* Font styles */
-          align-self: stretch; /* Align input height with container */
-          flex-grow: 1; /* Let the input take available horizontal space */
-          margin: auto 0; /* Center vertically */
+          align-self: stretch; 
+          flex-grow: 1; 
+          margin: auto 0;
+          border-radius: 20px; 
+          margin-right: -40px;
+          margin-left: 10px;
         }
         
         .div-43::placeholder {
-          color: #ccc; /* Placeholder text color */
+          color: #ccc; 
         }
         
         .div-43:focus {
-          outline: none; /* Remove default focus outline */
-          background-color: #6e7681; /* Optional: Change background on focus */
+          outline: none; 
+          background-color: #6e7681; 
         }
         @media (max-width: 991px) {
           .div-43 {
@@ -1587,6 +1590,27 @@ function App(props) {
           }
         }
         .div-81-title {
+          font-size: 30px; /* Adjust size as needed for your design */
+          font-weight: bold; /* Makes the title bold */
+          color: #ffffff; /* White color text */
+          line-height: 1.3; /* Adjust the line height for better readability */
+          margin-bottom: 10px; /* Space between title and content */
+          margin-top: -15px;
+          text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3); /* Optional text shadow for better legibility */
+          text-align: left; /* Aligns text to the left */
+        }
+        
+        .div-81-description {
+          text-align: right;
+          align-self: center;
+          font: 30px Outfit, sans-serif;
+          font-weight: normal;
+          color: #EEEEEE;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 5;
         }
 
         .div-81 {
@@ -1622,12 +1646,31 @@ function App(props) {
           border: 2px solid #50529b;
         }
         
+       
         .div-84 {
           text-align: right;
           align-self: end;
           margin-top: 20px;
           margin-bottom: -4%;
-          font: 20px Outfit, sans-serif;
+          font-size: 20px;
+          font-family: 'Outfit', sans-serif;
+        }
+        
+        .div-84 a {
+          padding: 10px 20px; 
+          background-color: #50529b; 
+          color: #ffffff; 
+          text-decoration: none; 
+          border-radius: 5px; 
+          border: none; 
+          transition: background-color 0.3s, color 0.3s; 
+          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); 
+        }
+        
+        .div-84 a:hover, .div-84 a:focus {
+          background-color: #393e46; 
+          color: #eeeeee; 
+          outline: none; 
         }
         @media (max-width: 991px) {
           .div-84 {
@@ -1678,20 +1721,19 @@ function App(props) {
         }
         
         .div-86-image {
-          align-self: flex-start; /* Align image to the left */
-          margin-top: -10%; /* Add some spacing between the text and the image */
-          margin-bottom: -4%; /* Add some spacing between the text and the image */
-          
-          
+          display: flex; /* Make this a flex container */
+          justify-content: center; /* Center children horizontally in the container */
+          align-items: center; /* Center children vertically in the container */
+          overflow: hidden; /* In case the image is too big */
+          margin-top: 20px; /* Adjust this as needed */
+          margin-bottom: -350px;
         }
         
         .div-86-image img {
-          width: 70%; /* Adjust as needed */
+          max-width: 95%; /* Make sure the image doesn't exceed its container */
           height: auto; /* Maintain aspect ratio */
           border-radius: 13.5px;
           border: 2px solid #50529b;
-          margin-bottom: -310px;
-          margin-top: 120px;
         }
         
         @media (max-width: 991px) {
@@ -1712,6 +1754,31 @@ function App(props) {
           text-align: center;
           font: 35px Outfit, sans-serif;
         }
+
+        .div-88-title {
+          font-size: 40px; 
+          font-weight: bold; 
+          color: #ffffff; 
+          line-height: 1.3; 
+          margin-top: -3px;
+          text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3); 
+          text-align: center; 
+        }
+
+        .div-86-description {
+          text-align: center;
+          align-self: center;
+          font: 32px Outfit, sans-serif;
+          font-weight: normal;
+          color: #EEEEEE;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 5;
+        }
+
+
         @media (max-width: 991px) {
           .div-88 {
             max-width: 100%;
@@ -1721,8 +1788,26 @@ function App(props) {
           text-align: right;
           align-self: end;
           margin-top: 370px;
-          
-          font: 20px Outfit, sans-serif;
+          margin-right: 20px;
+          font-size: 20px;
+          font-family: 'Outfit', sans-serif;
+        }
+        
+        .div-89 a {
+          padding: 10px 20px; 
+          background-color: #50529b; 
+          color: #ffffff; 
+          text-decoration: none; 
+          border-radius: 5px; 
+          border: none; 
+          transition: background-color 0.3s, color 0.3s; 
+          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); 
+        }
+        
+        .div-89 a:hover, .div-89 a:focus {
+          background-color: #393e46; 
+          color: #eeeeee; 
+          outline: none; 
         }
         @media (max-width: 991px) {
           .div-89 {
@@ -1790,6 +1875,16 @@ function App(props) {
           align-self: start;
           margin-top: 88px;
           font: 35px Outfit, sans-serif;
+        }
+        .div-98-title {
+          font-size: 30px; 
+          font-weight: bold;
+          color: #ffffff; 
+          line-height: 1.3; 
+          margin-bottom: 10px; 
+          margin-top: -15px;
+          text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3); 
+          text-align: right;
         }
         @media (max-width: 991px) {
           .div-93 {
@@ -1888,18 +1983,43 @@ function App(props) {
           margin-bottom: -220px;
         }
         .div-100-description {
-          text-align: left;
+          text-align: right;
           align-self: center;
           margin-left: -20px;
           margin-top: -80px;
           font: 30px Outfit, sans-serif;
+          font-weight: normal;
+          color: #EEEEEE;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 5;
         }
 
         .div-101 {
           text-align: right;
           align-self: end;
           margin-top: 241px;
-          font: 20px Outfit, sans-serif;
+          font-size: 20px;
+          font-family: 'Outfit', sans-serif;
+        }
+        
+        .div-101 a {
+          padding: 10px 20px; 
+          background-color: #50529b; 
+          color: #ffffff; 
+          text-decoration: none; 
+          border-radius: 5px; 
+          border: none; 
+          transition: background-color 0.3s, color 0.3s; 
+          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); 
+        }
+        
+        .div-101 a:hover, .div-101 a:focus {
+          background-color: #393e46; 
+          color: #eeeeee; 
+          outline: none; 
         }
         @media (max-width: 991px) {
           .div-101 {

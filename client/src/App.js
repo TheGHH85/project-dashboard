@@ -1601,7 +1601,7 @@ function App(props) {
         }
         
         .div-81-description {
-          text-align: right;
+          text-align: left;
           align-self: center;
           font: 30px Outfit, sans-serif;
           font-weight: normal;
@@ -1634,16 +1634,20 @@ function App(props) {
         }
         .div-83 {
           font: 35px Outfit, sans-serif;
+          
         }
         .div-83-image img {
           width: 100%;
           border-radius: 10px;
+          margin-bottom: -10px;
+         
         }
         .div-83-image {
           width: 100%; /* Adjust as needed */
           height: auto; /* Maintain aspect ratio */
           border-radius: 13.5px;
           border: 2px solid #50529b;
+          margin-top:20px;
         }
         
        
@@ -1730,7 +1734,7 @@ function App(props) {
         }
         
         .div-86-image img {
-          max-width: 95%; /* Make sure the image doesn't exceed its container */
+          max-width: 70%; /* Make sure the image doesn't exceed its container */
           height: auto; /* Maintain aspect ratio */
           border-radius: 13.5px;
           border: 2px solid #50529b;
@@ -1913,7 +1917,26 @@ function App(props) {
           text-align: right;
           align-self: end;
           margin-top: 325px;
-          font: 20px Outfit, sans-serif;
+          margin-right: 20px;
+          font-size: 20px;
+          font-family: 'Outfit', sans-serif;
+        }
+        
+        .div-96 a {
+          padding: 10px 20px; 
+          background-color: #50529b; 
+          color: #ffffff; 
+          text-decoration: none; 
+          border-radius: 5px; 
+          border: none; 
+          transition: background-color 0.3s, color 0.3s; 
+          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); 
+        }
+        
+        .div-96 a:hover, .div-96 a:focus {
+          background-color: #393e46; 
+          color: #eeeeee; 
+          outline: none; 
         }
         @media (max-width: 991px) {
           .div-96 {

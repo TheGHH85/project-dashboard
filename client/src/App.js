@@ -620,8 +620,9 @@ function App(props) {
           font-family: Outfit, sans-serif;
           color: white;
           border: 5px solid #50529b;
-
+          z-index: 1000; /* This will ensure that the banner is above other elements */
         }
+
 
         .button-style {
           border-radius: 13.5px;
@@ -655,7 +656,7 @@ function App(props) {
           background-color: rgba(31, 29, 71, 0.5);
           align-self: stretch;
           display: flex;
-          width: 97%;
+          width: 96.59%;
           align-items: start;
           justify-content: space-between;
           gap: 20px;

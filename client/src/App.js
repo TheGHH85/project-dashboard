@@ -587,23 +587,24 @@ function App(props) {
               {/* About Us Section */}
               <div className="footer-section about">
                 <h2>About Us</h2>
-                <p>A brief statement about your company or website, the team, or the services offered.</p>
+                <p>Small team of 3 devs put this site together for lambton collage. Check out the github for more.</p>
               </div>
 
               {/* Developers Section */}
               <div className="footer-section developers">
                 <h2>Developers</h2>
                 <ul>
-                  <li><a href="https://github.com/developer1" target="_blank" rel="noopener noreferrer">Developer 1</a></li>
-                  <li><a href="https://github.com/developer2" target="_blank" rel="noopener noreferrer">Developer 2</a></li>
-                  <li><a href="https://github.com/developer3" target="_blank" rel="noopener noreferrer">Developer 3</a></li>
+                  <li><a href="https://github.com/k-o-r-o" target="_blank" rel="noopener noreferrer"> Drake (koro)</a></li>
+                  <li><a href="https://github.com/GreyHatTech" target="_blank" rel="noopener noreferrer">Zac (GreyHatTech)</a></li>
+                  <li><a href="https://github.com/k-o-r-o" target="_blank" rel="noopener noreferrer">Maheswari</a></li>
+
                 </ul>
               </div>
 
               {/* Contact Us Section */}
               <div className="footer-section contact">
                 <h2>Contact Us</h2>
-                <p>Email us at: <a href="mailto:contact@example.com">contact@example.com</a></p>
+                <p>Email us at: <a href="mailto:drakelandon9@gmail.com">GreyHatTech@outlook.com</a></p>
               </div>
             </div>
 
@@ -2228,14 +2229,21 @@ function App(props) {
           width: 100%; /* Full width to spread out the columns */
           max-width: 1300px; /* Maximum width of the footer content */
         }
-        
-        .footer-section {
-          flex: 1; /* Each section will take up equal space */
-          padding: 0 15px; /* Padding inside each section */
-          min-width: 250px; /* Minimum width for each section */
-          max-width: 400px; /* Maximum width for each section */
+        .footer-container {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 0 10%; /* Adjust padding as needed */
         }
         
+        .footer-section {
+          flex: 1;
+          text-align: center;
+        }
+        .load-more {
+          text-align: center;
+          margin-bottom: 20px; /* Adjust spacing as needed */
+        } 
         .footer-section h2 {
           font-size: 40px;
           margin-bottom: 10px;
@@ -2249,7 +2257,9 @@ function App(props) {
           padding: 0;
           margin: 0;
         }
-        
+        .footer-section p {
+          margin-bottom: 15px;
+        }
         .footer-section a {
           color: #ffffff;
           text-decoration: none;

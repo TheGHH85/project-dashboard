@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef, useMemo } from "react";
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-
 function App(props) {
   const [news, setNews] = useState(null);
   const [weather, setWeather] = useState(null);
@@ -16,9 +15,6 @@ function App(props) {
   const [showLimitMessage, setShowLimitMessage] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const validArticleData = news ? getNextValidArticleData(news.articles, 0) : null;
-  
-
-
   
   const fetchStocks = async () => {
     try {
@@ -114,7 +110,7 @@ function App(props) {
       currentIndex++;
     }
   
-    return null; // Or some default data if you prefer
+    return null; 
   }
   
   
@@ -125,7 +121,7 @@ function App(props) {
       const data10 = getNextValidArticleData(news.articles, 10);
       const data6 = getNextValidArticleData(news.articles, 6);
       
-      console.log(data3.imageUrl); // Add this line to log the imageUrl
+      console.log(data3.imageUrl); 
   
       return {
         articleData3: data3,
@@ -243,7 +239,7 @@ function App(props) {
                 {weather && (
                   <div>
                     {weather.name}, {weather.sys.country}
-                    <span style={{ fontSize: '26px' }}></span> {/* Adjust font size as needed */}
+                    <span style={{ fontSize: '26px' }}></span> {}
                   </div>
                 )}
               </div>
@@ -620,7 +616,7 @@ function App(props) {
           font-family: Outfit, sans-serif;
           color: white;
           border: 5px solid #50529b;
-          z-index: 1000; /* This will ensure that the banner is above other elements */
+          z-index: 1000; 
         }
 
 
@@ -679,7 +675,7 @@ function App(props) {
           margin-top: 24px;
           font: 600 64px/43% Outfit, -apple-system, Roboto, Helvetica, sans-serif;
           margin-right: auto;
-          margin-left: 0; /* Ensures that .div-3 is pushed all the way to the left */
+          margin-left: 0; 
           padding-left: 270px;
         }
         
@@ -1295,7 +1291,7 @@ function App(props) {
           background-color: transparent; 
           color: #eee; 
           padding: 12px 20px; 
-          font: 400 30px/110% Outfit, -apple-system, Roboto, Helvetica, sans-serif; /* Font styles */
+          font: 400 30px/110% Outfit, -apple-system, Roboto, Helvetica, sans-serif;
           align-self: stretch; 
           flex-grow: 1; 
           margin: auto 0;
@@ -1660,14 +1656,14 @@ function App(props) {
           }
         }
         .div-81-title {
-          font-size: 30px; /* Adjust size as needed for your design */
-          font-weight: bold; /* Makes the title bold */
-          color: #ffffff; /* White color text */
-          line-height: 1.3; /* Adjust the line height for better readability */
-          margin-bottom: 10px; /* Space between title and content */
+          font-size: 30px; 
+          font-weight: bold; 
+          color: #ffffff;
+          line-height: 1.3; 
+          margin-bottom: 10px; 
           margin-top: -15px;
-          text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3); /* Optional text shadow for better legibility */
-          text-align: left; /* Aligns text to the left */
+          text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+          text-align: left; 
         }
         
         .div-81-description {
@@ -1713,8 +1709,8 @@ function App(props) {
          
         }
         .div-83-image {
-          width: 100%; /* Adjust as needed */
-          height: auto; /* Maintain aspect ratio */
+          width: 100%; 
+          height: auto; 
           border-radius: 13.5px;
           border: 2px solid #50529b;
           margin-top:20px;
@@ -1791,15 +1787,15 @@ function App(props) {
           align-self: start;
           margin-top: -3%;
           font: 35px Outfit, sans-serif;
-          text-align: right; /* Align text to the right */
+          text-align: right; 
         }
         
         .div-86-image {
-          display: flex; /* Make this a flex container */
-          justify-content: center; /* Center children horizontally in the container */
-          align-items: center; /* Center children vertically in the container */
-          overflow: hidden; /* In case the image is too big */
-          margin-top: 20px; /* Adjust this as needed */
+          display: flex; 
+          justify-content: center; 
+          align-items: center; 
+          overflow: hidden; 
+          margin-top: 20px; 
           margin-bottom: -350px;
         }
         
@@ -1954,7 +1950,7 @@ function App(props) {
           color: #ffffff;
           line-height: 1.3;
           text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
-          text-align: center; /* Ensure this is centered as with .div-88-title */
+          text-align: center; 
           margin-top: -100px;
         }
         
@@ -2007,8 +2003,8 @@ function App(props) {
           justify-content: center;
           align-items: center;
           overflow: hidden;
-          margin-top: 20px; /* Adjust margin-top to match .div-86-image */
-          margin-bottom: -350px; /* Match margin-bottom with .div-86-image */
+          margin-top: 20px;
+          margin-bottom: -350px; 
         }
         
 
@@ -2029,7 +2025,7 @@ function App(props) {
         .div-96 {
           text-align: right;
           align-self: end;
-          margin-top: 375px; /* Match margin-top with .div-89 */
+          margin-top: 375px; 
           margin-right: 20px;
           font-size: 20px;
           font-family: 'Outfit', sans-serif;
@@ -2111,8 +2107,8 @@ function App(props) {
         }
 
         .div-100-image img {
-          width: 100%; /* Adjust as needed */
-          height: auto; /* Maintain aspect ratio */
+          width: 100%; 
+          height: auto; 
           border-radius: 13.5px;
           border: 2px solid #50529b;
           margin-top: 20px;
@@ -2207,26 +2203,26 @@ function App(props) {
         .footer {
           display: flex;
           flex-direction: column;
-          background-color: rgba(31, 29, 71, 1); /* Dark purple background */
+          background-color: rgba(31, 29, 71, 1);
           color: white;
           padding: 20px;
           font-family: 'Outfit', sans-serif;
-          align-items: center; /* Center align footer content */
+          align-items: center; 
           
         }
         .footer-top {
           display: flex;
-          justify-content: center; /* Center the columns */
-          flex-wrap: wrap; /* Allow the columns to wrap on smaller screens */
-          gap: 20px; /* Space between columns */
-          width: 100%; /* Full width to spread out the columns */
-          max-width: 1300px; /* Maximum width of the footer content */
+          justify-content: center; 
+          flex-wrap: wrap; 
+          gap: 20px; 
+          width: 100%;
+          max-width: 1300px; 
         }
         .footer-container {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          padding: 0 10%; /* Adjust padding as needed */
+          padding: 0 10%;
         }
         
         .footer-section {
@@ -2235,7 +2231,7 @@ function App(props) {
         }
         .load-more {
           text-align: center;
-          margin-bottom: 20px; /* Adjust spacing as needed */
+          margin-bottom: 20px; 
         } 
         .footer-section h2 {
           font-size: 40px;
@@ -2274,12 +2270,12 @@ function App(props) {
           content: '';
           display: block;
           height: 1px;
-          background-color: rgba(80, 82, 155, 1); /* Lighter purple color for the border */
-          width: 346%; /* Width of the border as a percentage of its container */
+          background-color: rgba(80, 82, 155, 1); 
+          width: 346%; 
           position: absolute;
-          top: 0; /* Position it at the top of the footer-bottom */
-          left: 50%; /* Center it horizontally */
-          transform: translateX(-50%); /* Offset it by half its width to keep it centered */
+          top: 0; 
+          left: 50%; 
+          transform: translateX(-50%); 
         }
         
       `}</style>

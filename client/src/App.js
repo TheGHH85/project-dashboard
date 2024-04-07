@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import axios from 'axios';
 import Cookies from 'js-cookie';
+
 
 function App(props) {
   const [news, setNews] = useState(null);
@@ -14,6 +15,7 @@ function App(props) {
   const [isHovering, setIsHovering] = useState(false);
   const [showLimitMessage, setShowLimitMessage] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const validArticleData = news ? getNextValidArticleData(news.articles, 0) : null;
   
 
 
@@ -96,6 +98,45 @@ function App(props) {
     fetchNews();
     fetchStocks();
   }, []);
+
+  function getNextValidArticleData(articles, startingIndex) {
+    let currentIndex = startingIndex;
+  
+    while (currentIndex < articles.length) {
+      if (articles[currentIndex].urlToImage && articles[currentIndex].description) {
+        return {
+          title: articles[currentIndex].title,
+          description: articles[currentIndex].description,
+          imageUrl: articles[currentIndex].urlToImage,
+          url: articles[currentIndex].url,
+        };
+      }
+      currentIndex++;
+    }
+  
+    return null; // Or some default data if you prefer
+  }
+  
+  
+  const { articleData3, articleData8, articleData10, articleData6 } = React.useMemo(() => {
+    if (news && news.articles) {
+      const data3 = getNextValidArticleData(news.articles, 3);
+      const data8 = getNextValidArticleData(news.articles, 8);
+      const data10 = getNextValidArticleData(news.articles, 10);
+      const data6 = getNextValidArticleData(news.articles, 6);
+      
+      console.log(data3.imageUrl); // Add this line to log the imageUrl
+  
+      return {
+        articleData3: data3,
+        articleData8: data8,
+        articleData10: data10,
+        articleData6: data6,
+      };
+    }
+    return { articleData3: null, articleData8: null, articleData10: null, articleData6: null };
+  }, [news]);
+ 
 
   const handleNameChange = () => {
     const newName = prompt("Enter your new name:", name);
@@ -405,7 +446,7 @@ function App(props) {
               <div className="div-81">
               {news && news.articles && news.articles.length > 0 && (
                 <div className="div-81-title">
-                  {news.articles[3].title} 
+                  {articleData3.title}
                 </div>
               )}
               </div>
@@ -413,18 +454,18 @@ function App(props) {
                 <div className="div-83">
                   {news && news.articles && news.articles.length > 0 && (
                     <div className="div-81-description">
-                      {news.articles[3].description} 
+                      {articleData3.description} 
                     </div>
                   )}
                   <div className="div-83-image">
                     {news && news.articles && news.articles.length > 0 && (
-                      <img src={news.articles[3].urlToImage} alt="Article" />
+                      <img src={articleData3.imageUrl} alt="Article" />
                     )}
                   </div>
                 </div>
                 <div className="div-84">
                   {news && news.articles && news.articles.length > 0 && (
-                    <a href={news.articles[3].url} target="_blank" rel="noopener noreferrer">
+                    <a href={articleData3.url} target="_blank" rel="noopener noreferrer">
                       Read More
                     </a>
                   )}
@@ -439,7 +480,7 @@ function App(props) {
                     <div className="div-88">
                       {news && news.articles && news.articles.length > 0 && (
                         <div className="div-88-title">
-                          {news.articles[8].title} 
+                          {articleData8.title} 
                         </div>
                       )}
                       <br />
@@ -447,18 +488,18 @@ function App(props) {
                     <div className="div-86">
                       {news && news.articles && news.articles.length > 0 && (
                         <div className="div-86-description">
-                          {news.articles[8].description} 
+                          {articleData8.description} 
                         </div>
                       )}
                       <div className="div-86-image">
                         {news && news.articles && news.articles.length > 0 && (
-                          <img src={news.articles[8].urlToImage} alt="Article" />
+                          <img src={articleData8.imageUrl} alt="Article" />
                         )}
                       </div>
                     </div>
                     <div className="div-89">
                       {news && news.articles && news.articles.length > 0 && (
-                        <a href={news.articles[8].url} target="_blank" rel="noopener noreferrer">
+                        <a href={articleData8.url} target="_blank" rel="noopener noreferrer">
                           Read More
                         </a>
                       )}
@@ -474,8 +515,8 @@ function App(props) {
                 <div className="div-92">
                   <div className="div-93">
                     {news && news.articles && news.articles.length > 0 && (
-                      <div className="div-88">
-                        {news.articles[10].title} 
+                      <div className="div-93-title">
+                        {articleData10.title} 
                       </div>
                     )}
                     <br />
@@ -483,19 +524,19 @@ function App(props) {
                   <div className="div-94">
                     <div className="div-95">
                       {news && news.articles && news.articles.length > 0 && (
-                        <div className="div-81">
-                          {news.articles[10].description} 
+                        <div className="div-95-description">
+                          {articleData10.description} 
                         </div>
                       )}
-                      <div className="div-86-image">
+                      <div className="div-95-image">
                         {news && news.articles && news.articles.length > 0 && (
-                          <img src={news.articles[10].urlToImage} alt="Article" />
+                          <img src={articleData10.imageUrl} alt="Article" />
                         )}
                       </div>
                     </div>
                     <div className="div-96">
                       {news && news.articles && news.articles.length > 0 && (
-                        <a href={news.articles[10].url} target="_blank" rel="noopener noreferrer">
+                        <a href={articleData10.url} target="_blank" rel="noopener noreferrer">
                           Read More
                         </a>
                       )}
@@ -508,7 +549,7 @@ function App(props) {
                 <div className="div-98">
                     {news && news.articles && news.articles.length > 0 && (
                     <div className="div-98-title">
-                      {news.articles[6].title} 
+                      {articleData6.title} 
                     </div>
                   )}
                   <br />
@@ -517,18 +558,18 @@ function App(props) {
                   <div className="div-100">
                   {news && news.articles && news.articles.length > 0 && (
                     <div className="div-100-description">
-                      {news.articles[6].description} 
+                      {articleData6.description} 
                     </div>
                   )}
                   <div className="div-100-image">
                     {news && news.articles && news.articles.length > 0 && (
-                      <img src={news.articles[6].urlToImage} alt="Article" />
+                      <img src={articleData6.imageUrl} alt="Article" />
                     )}
                   </div>
                   </div>
                   <div className="div-101">
                   {news && news.articles && news.articles.length > 0 && (
-                    <a href={news.articles[6].url} target="_blank" rel="noopener noreferrer">
+                    <a href={articleData6.url} target="_blank" rel="noopener noreferrer">
                       Read More
                     </a>
                   )}
@@ -1779,7 +1820,7 @@ function App(props) {
           text-overflow: ellipsis;
           display: -webkit-box;
           -webkit-box-orient: vertical;
-          -webkit-line-clamp: 5;
+          -webkit-line-clamp: 2;
         }
 
 
@@ -1859,9 +1900,7 @@ function App(props) {
             #211f48 -58.41%,
             rgba(33, 31, 72, 0) 99.86%
           );
-          display: flex;
-          flex-grow: 1;
-          justify-content: space-between;
+
           gap: 20px;
           color: #fff;
           font-weight: 400;
@@ -1880,6 +1919,18 @@ function App(props) {
           margin-top: 88px;
           font: 35px Outfit, sans-serif;
         }
+        .div-93-title {
+          font-size: 40px;
+          font-weight: bold;
+          color: #ffffff;
+          line-height: 1.3;
+          text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+          text-align: center; /* Ensure this is centered as with .div-88-title */
+          margin-top: -100px;
+        }
+        
+
+
         .div-98-title {
           font-size: 30px; 
           font-weight: bold;
@@ -1908,6 +1959,38 @@ function App(props) {
           text-align: center;
           font: 35px Outfit, sans-serif;
         }
+
+        .div-95-description {
+          text-align: center;
+          font: 32px Outfit, sans-serif;
+          font-weight: normal;
+          color: #EEEEEE;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 2;
+          margin-top: -30px;
+        }
+
+        .div-95-image {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          overflow: hidden;
+          margin-top: 20px; /* Adjust margin-top to match .div-86-image */
+          margin-bottom: -350px; /* Match margin-bottom with .div-86-image */
+        }
+        
+
+        .div-95-image img {
+          max-width: 70%;
+          height: auto;
+          border-radius: 13.5px;
+          border: 2px solid #50529b;
+        }
+        
+
         @media (max-width: 991px) {
           .div-95 {
             max-width: 100%;
@@ -1916,21 +1999,21 @@ function App(props) {
         .div-96 {
           text-align: right;
           align-self: end;
-          margin-top: 325px;
+          margin-top: 325px; /* Match margin-top with .div-89 */
           margin-right: 20px;
           font-size: 20px;
           font-family: 'Outfit', sans-serif;
         }
         
         .div-96 a {
-          padding: 10px 20px; 
-          background-color: #50529b; 
-          color: #ffffff; 
-          text-decoration: none; 
-          border-radius: 5px; 
-          border: none; 
-          transition: background-color 0.3s, color 0.3s; 
-          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); 
+          padding: 10px 20px;
+          background-color: #50529b;
+          color: #ffffff;
+          text-decoration: none;
+          border-radius: 5px;
+          border: none;
+          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+          transition: background-color 0.3s, color 0.3s;
         }
         
         .div-96 a:hover, .div-96 a:focus {

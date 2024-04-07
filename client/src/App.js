@@ -581,33 +581,25 @@ function App(props) {
         </div>
         <div className="div-102">Load more</div>
         <div className="div-103">
-          {/* Footer Section */}
           <footer className="footer">
             <div className="footer-top">
-              {/* About Us Section */}
               <div className="footer-section about">
                 <h2>About Us</h2>
                 <p>Small team of 3 devs put this site together for lambton collage. Check out the github for more.</p>
               </div>
-
-              {/* Developers Section */}
               <div className="footer-section developers">
                 <h2>Developers</h2>
                 <ul>
                   <li><a href="https://github.com/k-o-r-o" target="_blank" rel="noopener noreferrer"> Drake (koro)</a></li>
                   <li><a href="https://github.com/GreyHatTech" target="_blank" rel="noopener noreferrer">Zac (GreyHatTech)</a></li>
                   <li><a href="https://github.com/k-o-r-o" target="_blank" rel="noopener noreferrer">Maheswari</a></li>
-
                 </ul>
               </div>
-
-              {/* Contact Us Section */}
               <div className="footer-section contact">
                 <h2>Contact Us</h2>
                 <p>Email us at: <a href="mailto:drakelandon9@gmail.com">GreyHatTech@outlook.com</a></p>
               </div>
             </div>
-
             <div className="footer-bottom">
               &copy; {new Date().getFullYear()} | Designed by Drake, Zac, Mahi
             </div>
@@ -687,7 +679,7 @@ function App(props) {
           font: 600 64px/43% Outfit, -apple-system, Roboto, Helvetica, sans-serif;
           margin-right: auto;
           margin-left: 0; /* Ensures that .div-3 is pushed all the way to the left */
-          padding-left: 380px;
+          padding-left: 270px;
         }
         
         @media (max-width: 991px) {
@@ -705,7 +697,7 @@ function App(props) {
           white-space: nowrap;
           margin-left: auto; 
           padding-right: 0px;
-          margin-right: -55px;
+          margin-right: -150px;
         }
         
         @media (max-width: 991px) {

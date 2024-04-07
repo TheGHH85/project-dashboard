@@ -434,7 +434,7 @@ function App(props) {
           </div>
         </div>
         {showLimitMessage && (
-          <div style={{ textAlign: 'center', color: 'red', marginBottom: '0px', fontSize: "35px", font: "35px Outfit, sans-serif" }}>
+          <div style={{ textAlign: 'center', color: 'red', marginBottom: '-10px', marginTop:"10px", fontSize: "35px", font: "35px Outfit, sans-serif" }}>
             Reached maximum calls per hour on free tier.
           </div>
         )}
@@ -580,7 +580,38 @@ function App(props) {
           </div>
         </div>
         <div className="div-102">Load more</div>
-        <div className="div-103" />
+        <div className="div-103">
+          {/* Footer Section */}
+          <footer className="footer">
+            <div className="footer-top">
+              {/* About Us Section */}
+              <div className="footer-section about">
+                <h2>About Us</h2>
+                <p>A brief statement about your company or website, the team, or the services offered.</p>
+              </div>
+
+              {/* Developers Section */}
+              <div className="footer-section developers">
+                <h2>Developers</h2>
+                <ul>
+                  <li><a href="https://github.com/developer1" target="_blank" rel="noopener noreferrer">Developer 1</a></li>
+                  <li><a href="https://github.com/developer2" target="_blank" rel="noopener noreferrer">Developer 2</a></li>
+                  <li><a href="https://github.com/developer3" target="_blank" rel="noopener noreferrer">Developer 3</a></li>
+                </ul>
+              </div>
+
+              {/* Contact Us Section */}
+              <div className="footer-section contact">
+                <h2>Contact Us</h2>
+                <p>Email us at: <a href="mailto:contact@example.com">contact@example.com</a></p>
+              </div>
+            </div>
+
+            <div className="footer-bottom">
+              &copy; {new Date().getFullYear()} | Designed by Drake, Zac, Mahi
+            </div>
+          </footer>
+        </div>
       </div>
       <style jsx>{`
         .consent-banner {
@@ -631,7 +662,7 @@ function App(props) {
           background-color: rgba(31, 29, 71, 0.5);
           align-self: stretch;
           display: flex;
-          width: 100%;
+          width: 97%;
           align-items: start;
           justify-content: space-between;
           gap: 20px;
@@ -652,12 +683,12 @@ function App(props) {
         }
         .div-3 {
           margin-top: 24px;
-          flex-grow: 1;
-          flex-basis: auto;
-          font: 600 64px/43% Outfit, -apple-system, Roboto, Helvetica,
-            sans-serif;
+          font: 600 64px/43% Outfit, -apple-system, Roboto, Helvetica, sans-serif;
           margin-right: auto;
+          margin-left: 0; /* Ensures that .div-3 is pushed all the way to the left */
+          padding-left: 380px;
         }
+        
         @media (max-width: 991px) {
           .div-3 {
             max-width: 100%;
@@ -671,7 +702,11 @@ function App(props) {
           justify-content: space-between;
           gap: 20px;
           white-space: nowrap;
+          margin-left: auto; 
+          padding-right: 0px;
+          margin-right: -55px;
         }
+        
         @media (max-width: 991px) {
           .div-4 {
             max-width: 100%;
@@ -1775,8 +1810,8 @@ function App(props) {
         }
         
         .div-86-image img {
-          max-width: 70%; /* Make sure the image doesn't exceed its container */
-          height: auto; /* Maintain aspect ratio */
+          max-width: 70%;
+          height: auto;
           border-radius: 13.5px;
           border: 2px solid #50529b;
         }
@@ -1820,7 +1855,7 @@ function App(props) {
           text-overflow: ellipsis;
           display: -webkit-box;
           -webkit-box-orient: vertical;
-          -webkit-line-clamp: 2;
+          -webkit-line-clamp: 3;
         }
 
 
@@ -1832,7 +1867,7 @@ function App(props) {
         .div-89 {
           text-align: right;
           align-self: end;
-          margin-top: 370px;
+          margin-top: 400px;
           margin-right: 20px;
           font-size: 20px;
           font-family: 'Outfit', sans-serif;
@@ -1936,8 +1971,8 @@ function App(props) {
           font-weight: bold;
           color: #ffffff; 
           line-height: 1.3; 
-          margin-bottom: 10px; 
-          margin-top: -15px;
+          margin-bottom: 10px;
+          margin-left: 0px;
           text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3); 
           text-align: right;
         }
@@ -1984,8 +2019,9 @@ function App(props) {
         
 
         .div-95-image img {
-          max-width: 70%;
+          max-width: 64%;
           height: auto;
+          max-height: 400px;
           border-radius: 13.5px;
           border: 2px solid #50529b;
         }
@@ -1999,7 +2035,7 @@ function App(props) {
         .div-96 {
           text-align: right;
           align-self: end;
-          margin-top: 325px; /* Match margin-top with .div-89 */
+          margin-top: 375px; /* Match margin-top with .div-89 */
           margin-right: 20px;
           font-size: 20px;
           font-family: 'Outfit', sans-serif;
@@ -2091,7 +2127,7 @@ function App(props) {
         .div-100-description {
           text-align: right;
           align-self: center;
-          margin-left: -20px;
+          margin-left: -10px;
           margin-top: -80px;
           font: 30px Outfit, sans-serif;
           font-weight: normal;
@@ -2106,7 +2142,7 @@ function App(props) {
         .div-101 {
           text-align: right;
           align-self: end;
-          margin-top: 241px;
+          margin-top: 230px;
           font-size: 20px;
           font-family: 'Outfit', sans-serif;
         }
@@ -2167,12 +2203,80 @@ function App(props) {
           align-self: stretch;
           min-height: 107px;
           margin-top: 19px;
-          width: 100%;
+          width: 99.8%;
         }
         @media (max-width: 991px) {
           .div-103 {
             max-width: 100%;
           }
+        }
+        .footer {
+          display: flex;
+          flex-direction: column;
+          background-color: rgba(31, 29, 71, 1); /* Dark purple background */
+          color: white;
+          padding: 20px;
+          font-family: 'Outfit', sans-serif;
+          align-items: center; /* Center align footer content */
+          
+        }
+        .footer-top {
+          display: flex;
+          justify-content: center; /* Center the columns */
+          flex-wrap: wrap; /* Allow the columns to wrap on smaller screens */
+          gap: 20px; /* Space between columns */
+          width: 100%; /* Full width to spread out the columns */
+          max-width: 1300px; /* Maximum width of the footer content */
+        }
+        
+        .footer-section {
+          flex: 1; /* Each section will take up equal space */
+          padding: 0 15px; /* Padding inside each section */
+          min-width: 250px; /* Minimum width for each section */
+          max-width: 400px; /* Maximum width for each section */
+        }
+        
+        .footer-section h2 {
+          font-size: 40px;
+          margin-bottom: 10px;
+        }
+        
+        .footer-section p,
+        .footer-section ul,
+        .footer-section li {
+          font-size: 25px;
+          list-style-type: none;
+          padding: 0;
+          margin: 0;
+        }
+        
+        .footer-section a {
+          color: #ffffff;
+          text-decoration: none;
+          transition: color 0.3s ease;
+        }
+        
+        .footer-section a:hover,
+        .footer-section a:focus {
+          color: #cccccc;
+        }
+        
+        .footer-bottom {
+          position: relative; 
+          text-align: center;
+          padding-top: 20px;
+          font-size: 25px;
+        }
+        .footer-bottom::after {
+          content: '';
+          display: block;
+          height: 1px;
+          background-color: rgba(80, 82, 155, 1); /* Lighter purple color for the border */
+          width: 346%; /* Width of the border as a percentage of its container */
+          position: absolute;
+          top: 0; /* Position it at the top of the footer-bottom */
+          left: 50%; /* Center it horizontally */
+          transform: translateX(-50%); /* Offset it by half its width to keep it centered */
         }
         
       `}</style>

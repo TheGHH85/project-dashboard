@@ -14,6 +14,7 @@ function App(props) {
   const [isHovering, setIsHovering] = useState(false);
   const [showLimitMessage, setShowLimitMessage] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [weatherSearchQuery, setWeatherSearchQuery] = useState('');
   const validArticleData = news ? getNextValidArticleData(news.articles, 0) : null;
   
   const fetchStocks = async () => {
@@ -71,15 +72,17 @@ function App(props) {
     }
   };
 
+  const fetchWeather = async (cityName) => {
+    try {
+      const response = await axios.get(`http://localhost:8080/api/weather?city=${encodeURIComponent(cityName)}`);
+      setWeather(response.data);
+    } catch (error) {
+      console.error('Error fetching weather data:', error.message);
+    }
+  };
+
   useEffect(() => {
-    const fetchWeather = async () => {
-      try {
-        const response = await axios.get('http://localhost:8080/api/weather');
-        setWeather(response.data);
-      } catch (error) {
-        console.error('Error fetching weather data:', error.message);
-      }
-    };
+  
 
     const fetchNews = async () => {
       try {
@@ -90,10 +93,22 @@ function App(props) {
       }
     };
 
-    fetchWeather();
+  
+    fetchWeather("Toronto");
     fetchNews();
     fetchStocks();
   }, []);
+
+  const handleWeatherSearchEnter = (e) => {
+    if (e.key === 'Enter') {
+      fetchWeather(weatherSearchQuery);
+      setWeatherSearchQuery(''); // Clear the search query
+    }
+  };
+  const handleWeatherSearchClick = () => {
+    fetchWeather(weatherSearchQuery);
+    setWeatherSearchQuery(''); // Clear the search query
+  };
 
   function getNextValidArticleData(articles, startingIndex) {
     let currentIndex = startingIndex;
@@ -133,6 +148,8 @@ function App(props) {
     return { articleData3: null, articleData8: null, articleData10: null, articleData6: null };
   }, [news]);
  
+  
+
 
   const handleNameChange = () => {
     const newName = prompt("Enter your new name:", name);
@@ -214,6 +231,31 @@ function App(props) {
           <div className="div-7" onClick={scrollToNews}>News</div>
         </div>
         </div>
+
+        
+          <div className="div-40" ref={weatherRef}>
+            <div className="div-41">
+            <img
+              src="/search.png"
+              className="div-42"
+              alt="Search"
+              onClick={executeSearch} 
+            />
+            <input
+                className="div-43"
+                placeholder="Search Weather by City"
+                value={weatherSearchQuery}
+                onChange={(e) => setWeatherSearchQuery(e.target.value)}
+                onKeyDown={handleWeatherSearchEnter} 
+              />
+              <img
+                loading="lazy"
+                src="https://cdn.builder.io/api/v1/image/assets/TEMP/2f9c373d0804712ab5f64a26887c68fe207244ccbb93b4f4ebe06cdeca2acb4d?apiKey=bfadb715bc704462b9199ff254b319bd&"
+                className="img-2"
+                onClick={clearSearch}
+              />
+            </div>
+          </div>
         <div className="div-9" ref={weatherRef}>
           <div className="div-10">
             <div className="column">

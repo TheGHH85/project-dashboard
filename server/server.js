@@ -53,11 +53,11 @@ const fetchNewsData = async () => {
 };
 
 // Function to fetch weather data
-const fetchWeatherData = async () => {
+const fetchWeatherData = async (cityName) => {
     const apiKeyWeather = process.env.WEATHER_API_KEY;
-    const url =`https://api.openweathermap.org/data/2.5/weather?q=London&appid=${apiKeyWeather}`;
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(cityName)}&appid=${apiKeyWeather}`;
 
-    try  {
+    try {
         const response = await axios.get(url);
         return response.data;
     } catch (error) {
@@ -102,9 +102,23 @@ app.get('/api/news', (req, res) => {
     res.json(newsData);
 });
 
-app.get('/api/weather', (req, res) => {
-    res.json(weatherData);
+app.get('/api/weather', async (req, res) => {
+    // Extract city name from query parameters
+    const cityName = req.query.city;
+    if (!cityName) {
+        return res.status(400).send('City name is required');
+    }
+    
+    try {
+        // Fetch weather data for the given city name
+        const weatherData = await fetchWeatherData(cityName);
+        res.json(weatherData);
+    } catch (error) {
+        console.error('Error fetching weather data:', error.message);
+        res.status(500).send('Error fetching weather data');
+    }
 });
+
 
 // Start the server
 const PORT = process.env.PORT || 8080;
